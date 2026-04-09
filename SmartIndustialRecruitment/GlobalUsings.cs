@@ -1,0 +1,4 @@
+﻿global using FluentValidation;
+global using SmartIndustialRecruitment.Abstractions;
+global using SmartIndustialRecruitment.Abstractions.Consts;
+global using SmartIndustialRecruitment.Errors;
