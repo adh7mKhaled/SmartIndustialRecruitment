@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using SmartIndustialRecruitment.Authentication;
 using SmartIndustialRecruitment.Entities;
 using SmartIndustialRecruitment.Persistance;
 using SmartIndustialRecruitment.Services;
+using System.Reflection;
 using System.Text;
 
 namespace SmartIndustialRecruitment;
@@ -21,6 +23,8 @@ public static class Dependancies
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
         services.AddAuthenticationConfig(configuration);
+
+        services.AddFluentValidationConfig();
 
         services.AddHttpContextAccessor();
         services.AddSwaggerServices();
@@ -51,6 +55,14 @@ public static class Dependancies
                 Description = "An ASP.NET Core Web API for managing ToDo items"
             });
         });
+
+        return services;
+    }
+
+    private static IServiceCollection AddFluentValidationConfig(this IServiceCollection services)
+    {
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddFluentValidationAutoValidation();
 
         return services;
     }
