@@ -1,4 +1,4 @@
-using SmartIndustialRecruitment;
+using SmartIndustrialRecruitment;
 
 var builder = WebApplication.CreateBuilder(args);
 

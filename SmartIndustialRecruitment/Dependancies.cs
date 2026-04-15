@@ -4,14 +4,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
-using SmartIndustialRecruitment.Authentication;
-using SmartIndustialRecruitment.Entities;
-using SmartIndustialRecruitment.Persistance;
-using SmartIndustialRecruitment.Services;
+using SmartIndustrialRecruitment.Authentication;
+using SmartIndustrialRecruitment.Entities.Identity;
+using SmartIndustrialRecruitment.Persistance;
+using SmartIndustrialRecruitment.Services;
+using SmartIndustrialRecruitment.Services.Authentication;
+using SmartIndustrialRecruitment.Services.JobApplications;
+using SmartIndustrialRecruitment.Services.Jobs;
 using System.Reflection;
 using System.Text;
 
-namespace SmartIndustialRecruitment;
+namespace SmartIndustrialRecruitment;
 
 public static class Dependancies
 {
@@ -30,6 +33,9 @@ public static class Dependancies
         services.AddSwaggerServices();
 
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IJobService, JobService>();
+        services.AddScoped<IApplicationService, ApplicationService>();
+        services.AddScoped<ICategoryService, CategoryService>();
 
         services.AddCors(options =>
             options.AddPolicy("myPolicy", builder =>

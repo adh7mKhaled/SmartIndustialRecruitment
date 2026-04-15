@@ -1,4 +1,4 @@
-﻿namespace SmartIndustialRecruitment.Errors;
+﻿namespace SmartIndustrialRecruitment.Errors;
 
 public static class GlobalErrors
 {

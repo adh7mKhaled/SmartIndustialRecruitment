@@ -1,4 +1,4 @@
-﻿namespace SmartIndustialRecruitment.Abstractions.Consts;
+﻿namespace SmartIndustrialRecruitment.Abstractions.Consts;
 
 public static class DefaultUsers
 {

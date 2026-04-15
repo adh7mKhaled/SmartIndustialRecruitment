@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace SmartIndustialRecruitment.Entities;
+namespace SmartIndustrialRecruitment.Entities.Identity;
 
 [Owned]
 public class RefreshToken

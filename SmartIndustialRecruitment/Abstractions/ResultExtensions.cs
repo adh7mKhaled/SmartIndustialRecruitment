@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SmartIndustialRecruitment.Abstractions;
+namespace SmartIndustrialRecruitment.Abstractions;
 
 public static class ResultExtensions
 {

@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using SmartIndustialRecruitment.Contracts.Authentication;
-using SmartIndustialRecruitment.Services;
+using SmartIndustrialRecruitment.Abstractions;
+using SmartIndustrialRecruitment.Contracts.Authentication;
+using SmartIndustrialRecruitment.Services.Authentication;
 
-namespace SmartIndustialRecruitment.Controllers;
+namespace SmartIndustrialRecruitment.Controllers;
 
 [Route("[controller]")]
 [ApiController]
@@ -25,10 +26,17 @@ public class AuthController(IAuthService authService, ILogger<AuthController> lo
         return authResult.IsSuccess ? Ok(authResult.Value) : authResult.ToProblem();
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken cancellationToken)
+    [HttpPost("register/worker")]
+    public async Task<IActionResult> RegisterWorker([FromBody] WorkerRegisterRequest request, CancellationToken cancellationToken)
     {
-        var result = await _authService.RegisterAsync(request, cancellationToken);
+        var result = await _authService.RegisterWorkerAsync(request, cancellationToken);
+        return result.IsSuccess ? Ok() : result.ToProblem();
+    }
+
+    [HttpPost("register/employer")]
+    public async Task<IActionResult> RegisterEmployer([FromBody] EmployerRegisterRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _authService.RegisterEmployerAsync(request, cancellationToken);
         return result.IsSuccess ? Ok() : result.ToProblem();
     }
 

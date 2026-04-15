@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmartIndustialRecruitment.Authentication;
+namespace SmartIndustrialRecruitment.Authentication;
 
 public class JwtOptions
 {

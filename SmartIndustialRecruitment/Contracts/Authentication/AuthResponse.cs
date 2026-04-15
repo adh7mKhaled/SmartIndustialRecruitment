@@ -1,4 +1,4 @@
-﻿namespace SmartIndustialRecruitment.Contracts.Authentication;
+﻿namespace SmartIndustrialRecruitment.Contracts.Authentication;
 
 public record AuthResponse(
 	string Id,

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace SmartIndustialRecruitment.Contracts.Authentication;
+namespace SmartIndustrialRecruitment.Contracts.Authentication;
 
 public class LoginRequestValidator : AbstractValidator<LoginRequest>
 {

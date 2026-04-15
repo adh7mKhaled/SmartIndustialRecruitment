@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SmartIndustialRecruitment.Abstractions.Consts;
-using SmartIndustialRecruitment.Entities;
+using SmartIndustrialRecruitment.Abstractions.Consts;
+using SmartIndustrialRecruitment.Entities.Identity;
 
-namespace SmartIndustialRecruitment.Persistance.EntitiesConfigurations;
+namespace SmartIndustrialRecruitment.Persistance.EntitiesConfigurations;
 
 public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 {
@@ -16,6 +16,8 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
             .ToTable("RefreshTokens")
             .WithOwner()
             .HasForeignKey("UserId");
+
+        builder.UseTptMappingStrategy();
 
         var passwordHasher = new PasswordHasher<ApplicationUser>();
 

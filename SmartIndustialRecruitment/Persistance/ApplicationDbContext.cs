@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SmartIndustialRecruitment.Entities;
+using SmartIndustrialRecruitment.Entities.Identity;
 
-namespace SmartIndustialRecruitment.Persistance;
+namespace SmartIndustrialRecruitment.Persistance;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
     IdentityDbContext<ApplicationUser, ApplicationRole, string>(options)

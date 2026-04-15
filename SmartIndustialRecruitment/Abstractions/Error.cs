@@ -1,4 +1,4 @@
-﻿namespace SmartIndustialRecruitment.Abstractions;
+﻿namespace SmartIndustrialRecruitment.Abstractions;
 
 public record Error(string Code, string Description, int? StatusCode)
 {

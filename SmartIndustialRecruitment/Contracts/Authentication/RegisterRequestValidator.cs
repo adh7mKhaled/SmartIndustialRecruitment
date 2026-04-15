@@ -1,4 +1,7 @@
-﻿namespace SmartIndustialRecruitment.Contracts.Authentication;
+﻿using SmartIndustrialRecruitment.Abstractions.Consts;
+using SmartIndustrialRecruitment.Errors;
+
+namespace SmartIndustrialRecruitment.Contracts.Authentication;
 
 public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {
