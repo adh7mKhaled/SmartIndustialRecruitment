@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SmartIndustialRecruitment.Abstractions.Consts;
-using SmartIndustialRecruitment.Entities;
+using SmartIndustrialRecruitment.Abstractions.Consts;
+using SmartIndustrialRecruitment.Entities.Identity;
 
-namespace SmartIndustialRecruitment.Persistance.EntitiesConfigurations;
+namespace SmartIndustrialRecruitment.Persistance.EntitiesConfigurations;
 
 public class RoleConfiguration : IEntityTypeConfiguration<ApplicationRole>
 {
@@ -17,7 +17,21 @@ public class RoleConfiguration : IEntityTypeConfiguration<ApplicationRole>
 				Name = DefaultRoles.Admin,
 				NormalizedName = DefaultRoles.Admin.ToUpper(),
 				ConcurrencyStamp = DefaultRoles.AdminRoleConcurrencyStamp,
-			}
-		]);
+			},
+            new ApplicationRole
+            {
+                Id = DefaultRoles.WorkerRoleId,
+                Name = DefaultRoles.Worker,
+                NormalizedName = DefaultRoles.Worker.ToUpper(),
+                ConcurrencyStamp = DefaultRoles.WorkerConcurrencyStamp,
+            },
+            new ApplicationRole
+            {
+                Id = DefaultRoles.EmployerRoleId,
+                Name = DefaultRoles.Employer,
+                NormalizedName = DefaultRoles.Employer.ToUpper(),
+                ConcurrencyStamp = DefaultRoles.EmployerConcurrencyStamp,
+            },
+        ]);
 	}
 }

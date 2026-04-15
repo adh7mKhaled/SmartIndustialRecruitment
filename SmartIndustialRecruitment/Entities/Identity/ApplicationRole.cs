@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace SmartIndustialRecruitment.Entities;
+namespace SmartIndustrialRecruitment.Entities.Identity;
 
 public class ApplicationRole : IdentityRole
 {

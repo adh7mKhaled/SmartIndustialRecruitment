@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using SmartIndustialRecruitment.Abstractions.Consts;
+using SmartIndustrialRecruitment.Abstractions.Consts;
 
-namespace SmartIndustialRecruitment.Contracts.Authentication;
+namespace SmartIndustrialRecruitment.Contracts.Authentication;
 
 public class ResetPasswordRequestValidator : AbstractValidator<ResetPasswordRequest>
 {

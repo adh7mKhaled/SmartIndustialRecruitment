@@ -2,16 +2,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using SmartIndustialRecruitment.Abstractions;
-using SmartIndustialRecruitment.Abstractions.Consts;
-using SmartIndustialRecruitment.Authentication;
-using SmartIndustialRecruitment.Contracts.Authentication;
-using SmartIndustialRecruitment.Entities;
-using SmartIndustialRecruitment.Errors;
 using System.Security.Cryptography;
-using Error = SmartIndustialRecruitment.Abstractions.Error;
+using Error = SmartIndustrialRecruitment.Abstractions.Error;
+using SmartIndustialRecruitment.Entities.Identity;
+using SmartIndustialRecruitment.Entities.Workers;
+using SmartIndustialRecruitment.Entities.Employers;
+using SmartIndustrialRecruitment.Entities.Identity;
+using SmartIndustrialRecruitment.Abstractions.Consts;
+using SmartIndustrialRecruitment.Errors;
+using SmartIndustrialRecruitment.Contracts.Authentication;
+using SmartIndustrialRecruitment.Abstractions;
+using SmartIndustrialRecruitment.Authentication;
 
-namespace SmartIndustialRecruitment.Services;
+namespace SmartIndustrialRecruitment.Services.Authentication;
 
 public class AuthService(UserManager<ApplicationUser> userManager, IJwtProvider jwtProvider,
     SignInManager<ApplicationUser> signInManager, ILogger<AuthService> logger) : IAuthService
@@ -81,7 +84,60 @@ public class AuthService(UserManager<ApplicationUser> userManager, IJwtProvider 
         return Result.Failure<AuthResponse>(error);
     }
 
-    public async Task<Result> RegisterAsync(Contracts.Authentication.RegisterRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result> RegisterWorkerAsync(WorkerRegisterRequest request, CancellationToken cancellationToken = default)
+    {
+        var validationResult = await ValidateNewUserAsync(request, cancellationToken);
+        if (!validationResult.IsSuccess) return validationResult;
+
+        var worker = new Worker
+        {
+            Email = request.IsEmail ? request.Email : null,
+            UserName = request.IsEmail ? request.Email : request.PhoneNumber,
+            PhoneNumber = !request.IsEmail ? request.PhoneNumber : null,
+            FullName = request.FullName,
+            JobTitle = request.JobTitle,
+            YearsOfExperience = request.YearsOfExperience,
+            City = request.City
+        };
+
+        var result = await _userManager.CreateAsync(worker, request.Password);
+
+        if (result.Succeeded)
+        {
+            await _userManager.AddToRoleAsync(worker, DefaultRoles.Worker);
+            return Result.Success();
+        }
+
+        return MapIdentityErrors(result);
+    }
+
+    public async Task<Result> RegisterEmployerAsync(EmployerRegisterRequest request, CancellationToken cancellationToken = default)
+    {
+        var validationResult = await ValidateNewUserAsync(request, cancellationToken);
+        if (!validationResult.IsSuccess) return validationResult;
+
+        var employer = new Employer
+        {
+            Email = request.IsEmail ? request.Email : null,
+            UserName = request.IsEmail ? request.Email : request.PhoneNumber,
+            PhoneNumber = !request.IsEmail ? request.PhoneNumber : null,
+            FullName = request.FullName,
+            CompanyName = request.CompanyName,
+            Address = request.Address
+        };
+
+        var result = await _userManager.CreateAsync(employer, request.Password);
+
+        if (result.Succeeded)
+        {
+            await _userManager.AddToRoleAsync(employer, DefaultRoles.Employer);
+            return Result.Success();
+        }
+
+        return MapIdentityErrors(result);
+    }
+
+    private async Task<Result> ValidateNewUserAsync(RegisterRequest request, CancellationToken cancellationToken)
     {
         if (request.IsEmail)
         {
@@ -89,7 +145,6 @@ public class AuthService(UserManager<ApplicationUser> userManager, IJwtProvider 
                 return Result.Failure(UserErrors.EmptyEmail);
 
             var emailExists = await _userManager.Users.AnyAsync(u => u.Email == request.Email, cancellationToken);
-
             if (emailExists)
                 return Result.Failure(UserErrors.DuplicatedEmail);
         }
@@ -99,35 +154,15 @@ public class AuthService(UserManager<ApplicationUser> userManager, IJwtProvider 
                 return Result.Failure(UserErrors.EmptyPhoneNumber);
 
             var phoneExists = await _userManager.Users.AnyAsync(u => u.PhoneNumber == request.PhoneNumber, cancellationToken);
-
             if (phoneExists)
                 return Result.Failure(UserErrors.DuplicatedPhonenumber);
         }
+        return Result.Success();
+    }
 
-        ApplicationUser user = new()
-        {
-            Email = request.IsEmail ? request.Email : null,
-            UserName = request.IsEmail ? request.Email : request.PhoneNumber,
-            PhoneNumber = !request.IsEmail ? request.PhoneNumber : null,
-            FullName = request.FullName,
-        };
-
-        var result = await _userManager.CreateAsync(user, request.Password);
-
-        if (result.Succeeded)
-        {
-            //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-            //_logger.LogInformation(message: "Confirmation code: {code}", code);
-
-            //await SendConfirmationEmail(user, code);
-
-            return Result.Success();
-        }
-
+    private Result MapIdentityErrors(IdentityResult result)
+    {
         var error = result.Errors.First();
-
         return Result.Failure(new Error(error.Code, error.Description, StatusCodes.Status400BadRequest));
     }
 
@@ -154,13 +189,11 @@ public class AuthService(UserManager<ApplicationUser> userManager, IJwtProvider 
 
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user, DefaultRoles.Member);
+            //await _userManager.AddToRoleAsync(user, DefaultRoles.Member);
             return Result.Success();
         }
 
-        var error = result.Errors.First();
-
-        return Result.Failure(new Error(error.Code, error.Description, StatusCodes.Status400BadRequest));
+        return MapIdentityErrors(result);
     }
 
     public async Task<Result> ResendConfirmationEmailAsync(ResendConfirmationEmailRequest request)
@@ -175,8 +208,6 @@ public class AuthService(UserManager<ApplicationUser> userManager, IJwtProvider 
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
         _logger.LogInformation(message: "Confirmation code: {code}", code);
-
-        // await SendConfirmationEmail(user, code);
 
         return Result.Success();
     }
@@ -238,8 +269,6 @@ public class AuthService(UserManager<ApplicationUser> userManager, IJwtProvider 
 
         _logger.LogInformation(message: "Confirmation code: {code}", code);
 
-        // await SendResetPasswordEmail(user, code);
-
         return Result.Success();
     }
 
@@ -265,45 +294,9 @@ public class AuthService(UserManager<ApplicationUser> userManager, IJwtProvider 
         if (result.Succeeded)
             return Result.Success();
 
-        var error = result.Errors.First();
-
-        return Result.Failure(new Error(error.Code, error.Description, StatusCodes.Status401Unauthorized));
+        return MapIdentityErrors(result);
     }
 
     private static string GenerateRefreshToken() =>
         Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-
-    //private async Task SendConfirmationEmail(ApplicationUser user, string code)
-    //{
-    //    var origin = _httpContextAccessor.HttpContext?.Request.Headers.Origin;
-
-    //    var placeholders = new Dictionary<string, string>
-    //    {
-    //        { "{{name}}", user.FirstName },
-    //        { "{{action_url}}", $"{origin}/auth/emailConfirmation?userId={user.Id}&code={code}" }
-    //    };
-
-    //    var emailBody = EmailBodyBuilder.GenerateEmailBody("EmailConfirmation", placeholders);
-
-    //    BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "✅ Exam Correction: Email Confirmation", emailBody));
-
-    //    await Task.CompletedTask;
-    //}
-
-    //private async Task SendResetPasswordEmail(ApplicationUser user, string code)
-    //{
-    //    var origin = _httpContextAccessor.HttpContext?.Request.Headers.Origin;
-
-    //    var placeholders = new Dictionary<string, string>
-    //    {
-    //        { "{{name}}", user.FirstName },
-    //        { "{{action_url}}", $"{origin}/auth/forgetPassword?userId={user.Email}&code={code}" }
-    //    };
-
-    //    var emailBody = EmailBodyBuilder.GenerateEmailBody("ForgetPassword", placeholders);
-
-    //    BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "✅ Exam Correction: Change Password", emailBody));
-
-    //    await Task.CompletedTask;
-    //}
 }

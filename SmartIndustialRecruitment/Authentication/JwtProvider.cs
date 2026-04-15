@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SmartIndustialRecruitment.Entities;
+using SmartIndustrialRecruitment.Entities.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
-namespace SmartIndustialRecruitment.Authentication;
+namespace SmartIndustrialRecruitment.Authentication;
 
 public class JwtProvider(IOptions<JwtOptions> jwtOptions) : IJwtProvider
 {

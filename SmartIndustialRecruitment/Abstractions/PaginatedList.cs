@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace SmartIndustialRecruitment.Abstractions;
+namespace SmartIndustrialRecruitment.Abstractions;
 
 public class PaginatedList<T>
 {

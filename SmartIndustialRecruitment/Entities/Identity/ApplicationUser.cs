@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace SmartIndustialRecruitment.Entities;
+namespace SmartIndustrialRecruitment.Entities.Identity;
 
 public class ApplicationUser : IdentityUser
 {
@@ -14,6 +14,7 @@ public class ApplicationUser : IdentityUser
     public bool IsDisabled { get; set; }
     public override string? Email { get; set; }
     public override string? PhoneNumber { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     public List<RefreshToken> RefreshTokens { get; set; } = [];
 }

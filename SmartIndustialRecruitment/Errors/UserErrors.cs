@@ -1,4 +1,6 @@
-namespace SmartIndustialRecruitment.Errors;
+using SmartIndustrialRecruitment.Abstractions;
+
+namespace SmartIndustrialRecruitment.Errors;
 
 public record UserErrors
 {

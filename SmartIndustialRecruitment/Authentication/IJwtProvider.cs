@@ -1,6 +1,6 @@
-﻿using SmartIndustialRecruitment.Entities;
+﻿using SmartIndustrialRecruitment.Entities.Identity;
 
-namespace SmartIndustialRecruitment.Authentication;
+namespace SmartIndustrialRecruitment.Authentication;
 
 public interface IJwtProvider
 {

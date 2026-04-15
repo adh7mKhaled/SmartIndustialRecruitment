@@ -1,4 +1,4 @@
-﻿namespace SmartIndustialRecruitment.Abstractions;
+﻿namespace SmartIndustrialRecruitment.Abstractions;
 
 public class Result
 {
