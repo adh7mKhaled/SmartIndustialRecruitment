@@ -9,10 +9,10 @@ using SmartIndustrialRecruitment.Persistance;
 
 #nullable disable
 
-namespace SmartIndustialRecruitment.Persistance.Migrations
+namespace SmartIndustrialRecruitment.Persistance.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260409180202_Initial")]
+    [Migration("20260417074320_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -131,7 +131,25 @@ namespace SmartIndustialRecruitment.Persistance.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("SmartIndustialRecruitment.Entities.ApplicationRole", b =>
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Categories.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Identity.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -172,10 +190,28 @@ namespace SmartIndustialRecruitment.Persistance.Migrations
                             IsDeleted = false,
                             Name = "Admin",
                             NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "019d9316-9d9f-7ca5-8522-688c4c04c0c5",
+                            ConcurrencyStamp = "019d9316-9d9f-7325-bf08-a7d3f5cc3f05",
+                            IsDefault = false,
+                            IsDeleted = false,
+                            Name = "Worker",
+                            NormalizedName = "WORKER"
+                        },
+                        new
+                        {
+                            Id = "019d9316-9d9f-79c3-9bee-040b17cdeae0",
+                            ConcurrencyStamp = "019d9316-9d9f-72b3-aa84-38a74896df29",
+                            IsDefault = false,
+                            IsDeleted = false,
+                            Name = "Employer",
+                            NormalizedName = "EMPLOYER"
                         });
                 });
 
-            modelBuilder.Entity("SmartIndustialRecruitment.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -198,6 +234,9 @@ namespace SmartIndustialRecruitment.Persistance.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("bit");
@@ -247,6 +286,8 @@ namespace SmartIndustialRecruitment.Persistance.Migrations
 
                     b.ToTable("AspNetUsers", (string)null);
 
+                    b.UseTptMappingStrategy();
+
                     b.HasData(
                         new
                         {
@@ -256,6 +297,7 @@ namespace SmartIndustialRecruitment.Persistance.Migrations
                             Email = "admin@SmartIndustialRecruitment.com",
                             EmailConfirmed = true,
                             FullName = "Smart Industial Recruitment",
+                            IsDeleted = false,
                             IsDisabled = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@SMARTINDUSTIALRECRUITMENT.COM",
@@ -269,9 +311,178 @@ namespace SmartIndustialRecruitment.Persistance.Migrations
                         });
                 });
 
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.JobApplications.JobApplication", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AppliedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CoverLetter")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WorkerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId");
+
+                    b.HasIndex("WorkerId");
+
+                    b.ToTable("JobApplications");
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Jobs.Job", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("Deadline")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("EmployerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("JobType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Salary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("EmployerId");
+
+                    b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Workers.WorkerSkill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("WorkerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("WorkerId");
+
+                    b.ToTable("WorkerSkills");
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Employers.Employer", b =>
+                {
+                    b.HasBaseType("SmartIndustrialRecruitment.Entities.Identity.ApplicationUser");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("CompanyName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.ToTable("Employers", (string)null);
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Workers.Worker", b =>
+                {
+                    b.HasBaseType("SmartIndustrialRecruitment.Entities.Identity.ApplicationUser");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<decimal?>("HourlyRate")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("JobTitle")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("YearsOfExperience")
+                        .HasColumnType("int");
+
+                    b.ToTable("Workers", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("SmartIndustialRecruitment.Entities.ApplicationRole", null)
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -280,7 +491,7 @@ namespace SmartIndustialRecruitment.Persistance.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SmartIndustialRecruitment.Entities.ApplicationUser", null)
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -289,7 +500,7 @@ namespace SmartIndustialRecruitment.Persistance.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SmartIndustialRecruitment.Entities.ApplicationUser", null)
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -298,13 +509,13 @@ namespace SmartIndustialRecruitment.Persistance.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("SmartIndustialRecruitment.Entities.ApplicationRole", null)
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SmartIndustialRecruitment.Entities.ApplicationUser", null)
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -313,16 +524,16 @@ namespace SmartIndustialRecruitment.Persistance.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SmartIndustialRecruitment.Entities.ApplicationUser", null)
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SmartIndustialRecruitment.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Identity.ApplicationUser", b =>
                 {
-                    b.OwnsMany("SmartIndustialRecruitment.Entities.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("SmartIndustrialRecruitment.Entities.Identity.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("UserId")
                                 .HasColumnType("nvarchar(450)");
@@ -355,6 +566,105 @@ namespace SmartIndustialRecruitment.Persistance.Migrations
                         });
 
                     b.Navigation("RefreshTokens");
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.JobApplications.JobApplication", b =>
+                {
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Jobs.Job", "Job")
+                        .WithMany("Applications")
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Workers.Worker", "Worker")
+                        .WithMany("Applications")
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+
+                    b.Navigation("Worker");
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Jobs.Job", b =>
+                {
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Categories.Category", "Category")
+                        .WithMany("Jobs")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Employers.Employer", "Employer")
+                        .WithMany("Jobs")
+                        .HasForeignKey("EmployerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Employer");
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Workers.WorkerSkill", b =>
+                {
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Categories.Category", "Category")
+                        .WithMany("WorkerSkills")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Workers.Worker", "Worker")
+                        .WithMany("Skills")
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Worker");
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Employers.Employer", b =>
+                {
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Identity.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("SmartIndustrialRecruitment.Entities.Employers.Employer", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Workers.Worker", b =>
+                {
+                    b.HasOne("SmartIndustrialRecruitment.Entities.Identity.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("SmartIndustrialRecruitment.Entities.Workers.Worker", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Categories.Category", b =>
+                {
+                    b.Navigation("Jobs");
+
+                    b.Navigation("WorkerSkills");
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Jobs.Job", b =>
+                {
+                    b.Navigation("Applications");
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Employers.Employer", b =>
+                {
+                    b.Navigation("Jobs");
+                });
+
+            modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Workers.Worker", b =>
+                {
+                    b.Navigation("Applications");
+
+                    b.Navigation("Skills");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartIndustrialRecruitment.Persistance;
 
@@ -11,9 +12,11 @@ using SmartIndustrialRecruitment.Persistance;
 namespace SmartIndustrialRecruitment.Persistance.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260417081034_TranslateSeedCategoriesToArabic")]
+    partial class TranslateSeedCategoriesToArabic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,7 +146,7 @@ namespace SmartIndustrialRecruitment.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -392,7 +395,7 @@ namespace SmartIndustrialRecruitment.Persistance.Migrations
 
                     b.HasIndex("WorkerId");
 
-                    b.ToTable("JobApplications", (string)null);
+                    b.ToTable("JobApplications");
                 });
 
             modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Jobs.Job", b =>
@@ -450,7 +453,7 @@ namespace SmartIndustrialRecruitment.Persistance.Migrations
 
                     b.HasIndex("EmployerId");
 
-                    b.ToTable("Jobs", (string)null);
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Workers.WorkerSkill", b =>
@@ -479,7 +482,7 @@ namespace SmartIndustrialRecruitment.Persistance.Migrations
 
                     b.HasIndex("WorkerId");
 
-                    b.ToTable("WorkerSkills", (string)null);
+                    b.ToTable("WorkerSkills");
                 });
 
             modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Employers.Employer", b =>

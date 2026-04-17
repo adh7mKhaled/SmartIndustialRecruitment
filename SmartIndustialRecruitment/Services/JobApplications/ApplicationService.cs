@@ -3,6 +3,7 @@ using SmartIndustrialRecruitment.Abstractions;
 using SmartIndustrialRecruitment.Contracts.Applications;
 using SmartIndustrialRecruitment.Entities.JobApplications;
 using SmartIndustrialRecruitment.Entities.Jobs;
+using SmartIndustrialRecruitment.Errors;
 using SmartIndustrialRecruitment.Persistance;
 
 namespace SmartIndustrialRecruitment.Services.JobApplications;
@@ -17,7 +18,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
             .AnyAsync(a => a.JobId == request.JobId && a.WorkerId == workerId, cancellationToken);
 
         if (alreadyApplied)
-            return Result.Failure<ApplicationResponse>(Error.None);
+            return Result.Failure<ApplicationResponse>(ApplicationErrors.AlreadyApplied);
 
         var application = new JobApplication
         {
@@ -53,7 +54,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
             .AnyAsync(j => j.Id == jobId && j.EmployerId == employerId, cancellationToken);
 
         if (!jobExists)
-            return Result.Failure<IEnumerable<ApplicationResponse>>(Error.None);
+            return Result.Failure<IEnumerable<ApplicationResponse>>(JobErrors.NotFound);
 
         var applications = await _context.Set<JobApplication>()
             .Include(a => a.Job)
@@ -73,7 +74,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
             .FirstOrDefaultAsync(a => a.Id == applicationId && a.Job!.EmployerId == employerId, cancellationToken);
 
         if (application is null)
-            return Result.Failure(Error.None);
+            return Result.Failure(ApplicationErrors.NotFound);
 
         application.Status = status;
         await _context.SaveChangesAsync(cancellationToken);

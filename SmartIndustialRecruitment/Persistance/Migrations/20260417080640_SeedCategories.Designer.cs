@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartIndustrialRecruitment.Persistance;
 
@@ -11,9 +12,11 @@ using SmartIndustrialRecruitment.Persistance;
 namespace SmartIndustrialRecruitment.Persistance.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260417080640_SeedCategories")]
+    partial class SeedCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,58 +146,58 @@ namespace SmartIndustrialRecruitment.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Name = "البناء والتشييد"
+                            Name = "Construction"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "التصنيع"
+                            Name = "Manufacturing"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "الخدمات اللوجستية"
+                            Name = "Logistics"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "اللحام والتشكيل"
+                            Name = "Welding & Fabrication"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "الكهرباء"
+                            Name = "Electrical"
                         },
                         new
                         {
                             Id = 6,
-                            Name = "السباكة"
+                            Name = "Plumbing"
                         },
                         new
                         {
                             Id = 7,
-                            Name = "النجارة"
+                            Name = "Carpentry"
                         },
                         new
                         {
                             Id = 8,
-                            Name = "تشغيل المعدات الثقيلة"
+                            Name = "Heavy Machinery Operation"
                         },
                         new
                         {
                             Id = 9,
-                            Name = "الصيانة والإصلاح"
+                            Name = "Maintenance & Repair"
                         },
                         new
                         {
                             Id = 10,
-                            Name = "المستودعات والتخزين"
+                            Name = "Warehousing"
                         });
                 });
 
@@ -392,7 +395,7 @@ namespace SmartIndustrialRecruitment.Persistance.Migrations
 
                     b.HasIndex("WorkerId");
 
-                    b.ToTable("JobApplications", (string)null);
+                    b.ToTable("JobApplications");
                 });
 
             modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Jobs.Job", b =>
@@ -450,7 +453,7 @@ namespace SmartIndustrialRecruitment.Persistance.Migrations
 
                     b.HasIndex("EmployerId");
 
-                    b.ToTable("Jobs", (string)null);
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Workers.WorkerSkill", b =>
@@ -479,7 +482,7 @@ namespace SmartIndustrialRecruitment.Persistance.Migrations
 
                     b.HasIndex("WorkerId");
 
-                    b.ToTable("WorkerSkills", (string)null);
+                    b.ToTable("WorkerSkills");
                 });
 
             modelBuilder.Entity("SmartIndustrialRecruitment.Entities.Employers.Employer", b =>

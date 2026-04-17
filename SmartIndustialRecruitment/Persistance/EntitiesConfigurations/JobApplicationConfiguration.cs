@@ -22,6 +22,6 @@ public class JobApplicationConfiguration : IEntityTypeConfiguration<JobApplicati
         builder.HasOne(x => x.Worker)
             .WithMany(x => x.Applications)
             .HasForeignKey(x => x.WorkerId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

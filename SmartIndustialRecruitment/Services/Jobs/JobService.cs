@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using SmartIndustrialRecruitment.Abstractions;
 using SmartIndustrialRecruitment.Contracts.Jobs;
 using SmartIndustrialRecruitment.Entities.Jobs;
 using SmartIndustrialRecruitment.Persistance;
@@ -12,20 +11,20 @@ public class JobService(ApplicationDbContext context) : IJobService
 
     public async Task<Result<JobResponse>> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var job = await _context.Set<Job>()
+        var job = await _context.Jobs
             .Include(j => j.Category)
             .Include(j => j.Employer)
             .FirstOrDefaultAsync(j => j.Id == id, cancellationToken);
 
         if (job is null)
-            return Result.Failure<JobResponse>(Error.None); // Should use a specific error
+            return Result.Failure<JobResponse>(JobErrors.NotFound);
 
         return Result.Success(MapToResponse(job));
     }
 
     public async Task<Result<PaginatedList<JobResponse>>> GetAllAsync(int pageNumber, int pageSize, int? categoryId, string? city, CancellationToken cancellationToken = default)
     {
-        var query = _context.Set<Job>()
+        var query = _context.Jobs
             .Include(j => j.Category)
             .Include(j => j.Employer)
             .AsQueryable();
@@ -50,7 +49,7 @@ public class JobService(ApplicationDbContext context) : IJobService
 
     public async Task<Result<IEnumerable<JobResponse>>> GetMyJobsAsync(string employerId, CancellationToken cancellationToken = default)
     {
-        var jobs = await _context.Set<Job>()
+        var jobs = await _context.Jobs
             .Include(j => j.Category)
             .Where(j => j.EmployerId == employerId)
             .OrderByDescending(j => j.Id)
@@ -76,7 +75,7 @@ public class JobService(ApplicationDbContext context) : IJobService
             Status = JobStatus.Open
         };
 
-        _context.Set<Job>().Add(job);
+        await _context.Jobs.AddAsync(job, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
         return await GetByIdAsync(job.Id, cancellationToken);
@@ -84,11 +83,11 @@ public class JobService(ApplicationDbContext context) : IJobService
 
     public async Task<Result> UpdateAsync(int id, string employerId, CreateJobRequest request, CancellationToken cancellationToken = default)
     {
-        var job = await _context.Set<Job>()
+        var job = await _context.Jobs
             .FirstOrDefaultAsync(j => j.Id == id && j.EmployerId == employerId, cancellationToken);
 
         if (job is null)
-            return Result.Failure(Error.None);
+            return Result.Failure(JobErrors.NotFound);
 
         job.Title = request.Title;
         job.Description = request.Description;
@@ -105,11 +104,11 @@ public class JobService(ApplicationDbContext context) : IJobService
 
     public async Task<Result> DeleteAsync(int id, string employerId, CancellationToken cancellationToken = default)
     {
-        var job = await _context.Set<Job>()
+        var job = await _context.Jobs
             .FirstOrDefaultAsync(j => j.Id == id && j.EmployerId == employerId, cancellationToken);
 
         if (job is null)
-            return Result.Failure(Error.None);
+            return Result.Failure(JobErrors.NotFound);
 
         _context.Set<Job>().Remove(job);
         await _context.SaveChangesAsync(cancellationToken);

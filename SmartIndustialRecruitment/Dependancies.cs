@@ -11,6 +11,7 @@ using SmartIndustrialRecruitment.Services;
 using SmartIndustrialRecruitment.Services.Authentication;
 using SmartIndustrialRecruitment.Services.JobApplications;
 using SmartIndustrialRecruitment.Services.Jobs;
+using SmartIndustrialRecruitment.Services.WorkerSkills;
 using System.Reflection;
 using System.Text;
 
@@ -36,6 +37,7 @@ public static class Dependancies
         services.AddScoped<IJobService, JobService>();
         services.AddScoped<IApplicationService, ApplicationService>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IWorkerSkillService, WorkerSkillService>();
 
         services.AddCors(options =>
             options.AddPolicy("myPolicy", builder =>
@@ -54,11 +56,29 @@ public static class Dependancies
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo
+            options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
             {
                 Version = "v1",
                 Title = "Smart Industial Recruitment",
-                Description = "An ASP.NET Core Web API for managing ToDo items"
+                Description = "An ASP.NET Core Web API for Industrial Recruitment"
+            });
+
+            options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = Microsoft.OpenApi.SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = Microsoft.OpenApi.ParameterLocation.Header,
+                Description = "Please enter your token (without 'Bearer ' prefix)"
+            });
+
+            options.AddSecurityRequirement(_ => new Microsoft.OpenApi.OpenApiSecurityRequirement
+            {
+                {
+                    new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer"),
+                    new System.Collections.Generic.List<string>()
+                }
             });
         });
 
