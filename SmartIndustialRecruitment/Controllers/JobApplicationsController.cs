@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartIndustrialRecruitment.Abstractions;
 using SmartIndustrialRecruitment.Contracts.Applications;
 using SmartIndustrialRecruitment.Entities.JobApplications;
 using SmartIndustrialRecruitment.Services.JobApplications;
@@ -16,7 +15,7 @@ public class JobApplicationsController(IApplicationService applicationService) :
     private readonly IApplicationService _applicationService = applicationService;
 
     [HttpPost("apply")]
-    [Authorize(Roles = "Worker")]
+    [Authorize(Roles = DefaultRoles.Worker)]
     public async Task<IActionResult> Apply([FromBody] ApplyForJobRequest request, CancellationToken cancellationToken)
     {
         var workerId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
@@ -28,7 +27,7 @@ public class JobApplicationsController(IApplicationService applicationService) :
     }
 
     [HttpGet("my-applications")]
-    [Authorize(Roles = "Worker")]
+    [Authorize(Roles = DefaultRoles.Worker)]
     public async Task<IActionResult> GetMyApplications(CancellationToken cancellationToken)
     {
         var workerId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
@@ -40,7 +39,7 @@ public class JobApplicationsController(IApplicationService applicationService) :
     }
 
     [HttpGet("job/{jobId}")]
-    [Authorize(Roles = "Employer")]
+    [Authorize(Roles = DefaultRoles.Employer)]
     public async Task<IActionResult> GetJobApplications([FromRoute] int jobId, CancellationToken cancellationToken)
     {
         var employerId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
@@ -52,7 +51,7 @@ public class JobApplicationsController(IApplicationService applicationService) :
     }
 
     [HttpPatch("{applicationId}/status")]
-    [Authorize(Roles = "Employer")]
+    [Authorize(Roles = DefaultRoles.Employer)]
     public async Task<IActionResult> UpdateStatus([FromRoute] int applicationId, [FromBody] ApplicationStatus status, CancellationToken cancellationToken)
     {
         var employerId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);

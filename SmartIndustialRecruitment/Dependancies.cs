@@ -73,12 +73,9 @@ public static class Dependancies
                 Description = "Please enter your token (without 'Bearer ' prefix)"
             });
 
-            options.AddSecurityRequirement(_ => new Microsoft.OpenApi.OpenApiSecurityRequirement
+            options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
             {
-                {
-                    new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer"),
-                    new System.Collections.Generic.List<string>()
-                }
+                [new OpenApiSecuritySchemeReference("Bearer", document)] = new List<string>()
             });
         });
 

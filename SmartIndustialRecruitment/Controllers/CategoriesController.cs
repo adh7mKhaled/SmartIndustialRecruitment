@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using SmartIndustrialRecruitment.Abstractions;
 using SmartIndustrialRecruitment.Services;
 
 namespace SmartIndustrialRecruitment.Controllers;
