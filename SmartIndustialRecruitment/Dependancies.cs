@@ -40,11 +40,11 @@ public static class Dependancies
         services.AddScoped<IWorkerSkillService, WorkerSkillService>();
 
         services.AddCors(options =>
-            options.AddPolicy("myPolicy", builder =>
+            options.AddPolicy("AllowFrontend", builder =>
                 builder
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .WithOrigins(configuration.GetSection("AllowedOrigins").Get<string[]>()!)
+                    .AllowAnyOrigin()
             )
         );
 
