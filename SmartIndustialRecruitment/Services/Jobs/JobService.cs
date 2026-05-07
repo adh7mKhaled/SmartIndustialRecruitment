@@ -44,7 +44,7 @@ public class JobService(ApplicationDbContext context) : IJobService
 
         var totalCount = await query.CountAsync(cancellationToken);
 
-        return Result.Success(new PaginatedList<JobResponse>(jobs, totalCount, pageNumber, pageSize));
+        return Result.Success(new PaginatedList<JobResponse>(jobs, pageNumber, totalCount, pageSize));
     }
 
     public async Task<Result<IEnumerable<JobResponse>>> GetMyJobsAsync(string employerId, CancellationToken cancellationToken = default)
