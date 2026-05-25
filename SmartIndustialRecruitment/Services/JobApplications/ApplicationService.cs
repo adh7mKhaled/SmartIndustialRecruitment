@@ -40,6 +40,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
         var applications = await _context.Set<JobApplication>()
             .Include(a => a.Job)
             .Include(a => a.Worker)
+                .ThenInclude(w => w.Skills)
             .Where(a => a.WorkerId == workerId)
             .OrderByDescending(a => a.AppliedAt)
             .Select(a => MapToResponse(a))
@@ -59,6 +60,7 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
         var applications = await _context.Set<JobApplication>()
             .Include(a => a.Job)
             .Include(a => a.Worker)
+                .ThenInclude(w => w.Skills)
             .Where(a => a.JobId == jobId)
             .OrderByDescending(a => a.AppliedAt)
             .Select(a => MapToResponse(a))
@@ -87,13 +89,18 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
         var application = await _context.Set<JobApplication>()
             .Include(a => a.Job)
             .Include(a => a.Worker)
+                .ThenInclude(w => w.Skills)
             .FirstAsync(a => a.Id == id, cancellationToken);
 
         return MapToResponse(application);
     }
 
-    private static ApplicationResponse MapToResponse(JobApplication application) =>
-        new(
+    private static ApplicationResponse MapToResponse(JobApplication application)
+    {
+        var worker = application.Worker as SmartIndustrialRecruitment.Entities.Workers.Worker;
+        var skills = worker?.Skills?.Select(s => s.Name).ToList() ?? new System.Collections.Generic.List<string>();
+
+        return new(
             application.Id,
             application.JobId,
             application.Job?.Title ?? string.Empty,
@@ -101,6 +108,13 @@ public class ApplicationService(ApplicationDbContext context) : IApplicationServ
             application.Worker?.FullName ?? string.Empty,
             application.CoverLetter,
             application.Status,
-            application.AppliedAt
+            application.AppliedAt,
+            application.Worker?.Email,
+            application.Worker?.PhoneNumber,
+            worker?.City ?? string.Empty,
+            worker?.JobTitle ?? string.Empty,
+            worker?.YearsOfExperience ?? 0,
+            skills
         );
+    }
 }

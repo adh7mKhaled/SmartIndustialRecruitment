@@ -27,4 +27,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<SmartIndustrialRecruitment.Persistance.ApplicationDbContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<SmartIndustrialRecruitment.Entities.Identity.ApplicationUser>>();
+    await SmartIndustrialRecruitment.Persistance.DbSeeder.SeedAsync(context, userManager);
+}
+
 app.Run();

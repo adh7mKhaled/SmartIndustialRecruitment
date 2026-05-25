@@ -10,5 +10,11 @@ public record ApplicationResponse(
     string WorkerName,
     string? CoverLetter,
     ApplicationStatus Status,
-    DateTime AppliedAt
+    DateTime AppliedAt,
+    string? WorkerEmail = null,
+    string? WorkerPhoneNumber = null,
+    string? WorkerCity = null,
+    string? WorkerJobTitle = null,
+    int? WorkerYearsOfExperience = null,
+    System.Collections.Generic.List<string>? WorkerSkills = null
 );
