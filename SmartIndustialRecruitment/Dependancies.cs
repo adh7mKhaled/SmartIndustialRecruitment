@@ -11,6 +11,7 @@ using SmartIndustrialRecruitment.Services;
 using SmartIndustrialRecruitment.Services.Authentication;
 using SmartIndustrialRecruitment.Services.JobApplications;
 using SmartIndustrialRecruitment.Services.Jobs;
+using SmartIndustrialRecruitment.Services.Profile;
 using SmartIndustrialRecruitment.Services.WorkerSkills;
 using SmartIndustrialRecruitment.Services.Recommendation;
 using System.Reflection;
@@ -40,6 +41,7 @@ public static class Dependancies
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IWorkerSkillService, WorkerSkillService>();
         services.AddHttpClient<IRecommendationService, RecommendationService>();
+        services.AddScoped<IProfileService, ProfileService>();
 
         services.AddCors(options =>
             options.AddPolicy("AllowFrontend", builder =>

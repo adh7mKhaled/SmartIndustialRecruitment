@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartIndustrialRecruitment.Entities.Identity;
 using SmartIndustrialRecruitment.Persistance;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SmartIndustrialRecruitment.Controllers;
 
@@ -38,7 +39,7 @@ public class ProfileController(ApplicationDbContext context) : ControllerBase
                 isAvailable = worker.IsAvailable,
                 role = "Worker"
             });
-        }
+    }
 
         // Check if employer
         var employer = await _context.Employers.FindAsync(userId);
